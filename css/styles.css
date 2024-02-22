@@ -1,0 +1,7 @@
+body {
+    display: flex;
+    text-align: center;
+    font-size: 30px;
+    font-weight: 700;
+    padding-left: 150px;
+}
