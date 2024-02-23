@@ -3,5 +3,6 @@ body {
     text-align: center;
     font-size: 30px;
     font-weight: 700;
-    padding: 600px;
+    width: 40%;
+    margin: 0 auto;
 }
