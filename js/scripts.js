@@ -31,21 +31,43 @@ function getAll() {
     return pokemonList;
 }
 
+// function to show the details of the pokemon object
+function showDetails(pokemon) {
+    console.log(pokemon);
+}
+
+// function to select and add buttons for the list of pokemon and display their details
+function addListItem(pokemon) {
+  let listCreate = document.querySelector('.pokemon-list');
+  let listItem = document.createElement('li');
+  let button = document.createElement('button');
+  button.innerText = pokemon.name;
+  button.classList.add('button-class');
+  listItem.appendChild(button);
+  listCreate.appendChild(listItem);
+  button.addEventListener('click', function() {
+    showDetails(pokemon);
+  });
+}
+
 return {
-    add:add,
-    getAll:getAll
+    add: add,
+    getAll: getAll,
+    addListItem: addListItem
 };
 })();
+
+// adding a pokemon to the array
+console.log(pokemonRepository.getAll());
+pokemonRepository.add({name: 'Pikachu', height: 0.2, type: ['Electric'] });
+console.log(pokemonRepository.getAll());
+
 
 // Get the list of Pokemon
 let allPokemon = pokemonRepository.getAll();
 
 // Iterate through each Pokemon and display its details
 allPokemon.forEach(function(pokemon) {
-  document.write(`<p>Name: ${pokemon.name}, Height: ${pokemon.height}, Type: ${pokemon.type.join(', ')}</p>`);
+  pokemonRepository.addListItem(pokemon);
 });
 
-// adding a pokemon to the array
-console.log(pokemonRepository.getAll());
-pokemonRepository.add({name: 'Pikachu', height: 0.2, type: ['Electric'] });
-console.log(pokemonRepository.getAll());
