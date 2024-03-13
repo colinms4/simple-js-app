@@ -1,25 +1,8 @@
 // pokemon app
 // start of IIFE
 let pokemonRepository = (function() {
-    let pokemonList = [
-    {
-        name: 'Charmander',
-        height: 0.6,
-        type: ['Fire', 'Solar-Power']
-    },
-
-    {
-        name: 'Bulbasaur',
-        height: 0.7,
-        type: ['Monster', 'Grass']
-    },
-
-    {
-        name: 'Squirtle',
-        height: 0.5,
-        type: ['Monster','Water']
-    }
-];
+    let pokemonList = [];
+    let pokiApi = 'https://pokeapi.co/api/v2/pokemon/';
 
 // function to add pokemon to the array
 function add(pokemon) {
@@ -33,7 +16,38 @@ function getAll() {
 
 // function to show the details of the pokemon object
 function showDetails(pokemon) {
-    console.log(pokemon);
+    loadDeatils(pokemon);
+}
+
+// function to load details from pokemon api
+function loadDeatils(item) {
+    let url = item.detailsUrl;
+    return fetch(url).then(function (response){
+        return response.json();
+    }).then(function (details) {
+        item.imageUrl = details.sprites.front_default;
+        item.height = details.height;
+        item.types = details.types;
+    }).catch(function (e) {
+        console.error(e);
+    });
+}
+
+// function to load the names and url of pokemon from the api
+function loadList () {
+    return fetch(pokiApi).then(function (response) {
+        return response.json();
+    }).then(function (json) {
+        json.results.forEach(function (item) {
+            let pokemon = {
+                name: item.name,
+                detailsUrl: item.url
+            };
+            add(pokemon);
+        });
+    }).catch(function(e) {
+        console.error(e);
+    })
 }
 
 // function to select and add buttons for the list of pokemon and display their details
@@ -53,7 +67,9 @@ function addListItem(pokemon) {
 return {
     add: add,
     getAll: getAll,
-    addListItem: addListItem
+    addListItem: addListItem,
+    loadList: loadList,
+    loadDeatils: loadDeatils
 };
 })();
 
@@ -67,7 +83,8 @@ console.log(pokemonRepository.getAll());
 let allPokemon = pokemonRepository.getAll();
 
 // Iterate through each Pokemon and display its details
-allPokemon.forEach(function(pokemon) {
-  pokemonRepository.addListItem(pokemon);
+pokemonRepository.loadList().then(function() {
+    allPokemon.forEach(function(pokemon) {
+        pokemonRepository.addListItem(pokemon);
+    });
 });
-
