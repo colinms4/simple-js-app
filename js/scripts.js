@@ -14,13 +14,66 @@ function getAll() {
     return pokemonList;
 }
 
-// function to show the details of the pokemon object
 function showDetails(pokemon) {
-    loadDeatils(pokemon);
+    loadDetails(pokemon).then(() => {
+        showModal(pokemon.name, `Height: ${pokemon.height}`, pokemon.imageUrl);
+    });
 }
 
+// function to show modal on screen when clicked
+function showModal(title, text, imageUrl) {
+    let modalContainer = document.querySelector('#modal-container');
+    modalContainer.innerHTML = ' ';
+    let modal = document.createElement('div');
+    modal.classList.add('modal');
+    let closeButtonElement = document.createElement('button');
+    closeButtonElement.classList.add('modal-close');
+    closeButtonElement.innerText = 'Close';
+    closeButtonElement.addEventListener('click', hideModal);
+    
+    let titleElement = document.createElement('h1');
+    titleElement.innerText = title;
+    let contentElement = document.createElement('p');
+    contentElement.innerText = text;
+    // Create an image element and set its source to the imageUrl
+    let imageElement = document.createElement('img');
+    imageElement.src = imageUrl;
+    
+    modal.appendChild(closeButtonElement);
+    modal.appendChild(titleElement);
+    modal.appendChild(contentElement);
+    modal.appendChild(imageElement);
+    modalContainer.appendChild(modal);
+    
+    modalContainer.classList.add('is-visable');
+}
+
+function hideModal() {
+    let modalContainer = document.querySelector('#modal-container');
+    modalContainer.classList.remove('is-visable');
+}
+
+window.addEventListener('keydown', (e) => {
+    let modalContainer = document.querySelector('#modal-container');
+    if (e.key === 'Escape' && modalContainer.classList.contains('is-visable')) {
+        hideModal();
+    }
+});
+
+let modalContainer = document.querySelector('#modal-container');
+modalContainer.addEventListener('click',(e)=> {
+    let target = e.target;
+    if (target === modalContainer) {
+        hideModal();
+    }
+});
+
+document.querySelector('#show-modal').addEventListener('click', () => {
+    showModal('Modal Title', 'This is Modal Content');
+});
+
 // function to load details from pokemon api
-function loadDeatils(item) {
+function loadDetails(item) {
     let url = item.detailsUrl;
     return fetch(url).then(function (response){
         return response.json();
@@ -69,7 +122,7 @@ return {
     getAll: getAll,
     addListItem: addListItem,
     loadList: loadList,
-    loadDeatils: loadDeatils
+    loadDetails: loadDetails
 };
 })();
 
